@@ -15,6 +15,7 @@ WORKDIR /src
 COPY ["TandemBackend.csproj", "."]
 RUN dotnet restore "./TandemBackend.csproj"
 COPY . .
+RUN mkdir -p /app/database
 WORKDIR "/src/."
 RUN dotnet build "./TandemBackend.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
@@ -27,4 +28,5 @@ RUN dotnet publish "./TandemBackend.csproj" -c $BUILD_CONFIGURATION -o /app/publ
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN mkdir -p /app/database
 ENTRYPOINT ["dotnet", "TandemBackend.dll"]
