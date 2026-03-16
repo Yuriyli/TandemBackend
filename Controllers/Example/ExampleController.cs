@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TandemBackend.Data;
 using TandemBackend.Models;
@@ -42,7 +43,7 @@ namespace TandemBackend.Controllers.Example
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(string name, string description)
         {
@@ -59,7 +60,7 @@ namespace TandemBackend.Controllers.Example
                 var isSaved = await _context.SaveChangesAsync();
 
                 if (isSaved >= 1)
-                    return Ok();
+                    return Created();
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
             catch
@@ -69,7 +70,7 @@ namespace TandemBackend.Controllers.Example
         }
 
         [HttpDelete("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete([FromRoute] int id)
@@ -79,7 +80,9 @@ namespace TandemBackend.Controllers.Example
                 var model = await _context.ExampleModels.FirstOrDefaultAsync(u => u.Id == id);
                 if (model == null)
                     return NotFound();
-                return Ok();
+                _context.ExampleModels.Remove(model);
+                await _context.SaveChangesAsync();
+                return NoContent();
             }
             catch (System.Exception)
             {
@@ -100,9 +103,11 @@ namespace TandemBackend.Controllers.Example
                 );
                 if (originModel == null)
                     return NotFound();
+
                 originModel.Name = model.Name;
                 originModel.Description = model.Description;
                 await _context.SaveChangesAsync();
+
                 return Ok();
             }
             catch (System.Exception)
