@@ -1,6 +1,0 @@
-@TandemBackend_HostAddress = http://localhost:5227
-
-GET {{TandemBackend_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

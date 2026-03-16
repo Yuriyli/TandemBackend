@@ -1,23 +1,52 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using TandemBackend.Data;
 
+var builder = WebApplication.CreateBuilder(args);
+  
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+var di = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+Console.WriteLine("FOLDERS....");
+foreach (var d in di.GetDirectories())
+{
+    Console.WriteLine(d.FullName);
+
+}
+Console.WriteLine("FILES....");
+foreach (var f in di.GetFiles())
+{
+    Console.WriteLine(f.FullName);
+
+}
+
+builder.Services.AddDbContext<ApplicationContext>(options =>
+    options.UseSqlite(connectionString));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+
 }
+
+app.MapOpenApi();
+
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/openapi/v1.json", "Open API V1");
+});
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();
