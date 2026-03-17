@@ -13,19 +13,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 var di = new DirectoryInfo(Directory.GetCurrentDirectory());
 
-Console.WriteLine("FOLDERS....");
-foreach (var d in di.GetDirectories())
-{
-    Console.WriteLine(d.FullName);
-
-}
-Console.WriteLine("FILES....");
-foreach (var f in di.GetFiles())
-{
-    Console.WriteLine(f.FullName);
-
-}
-
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlite(connectionString));
 
