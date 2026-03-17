@@ -1,6 +1,6 @@
 ﻿namespace TandemBackend.Models
 {
-    public class Article
+    public class Topic
     {
         public required int Id { get; set; }
         public required string Title { get; set; }
@@ -9,7 +9,7 @@
         public required string ContentRu { get; set; }
     }
 
-    public class ArticlePut
+    public class TopicPut
     {
         public required string Title { get; set; }
         public required string Content { get; set; }
@@ -17,10 +17,16 @@
         public required string ContentRu { get; set; }
     }
 
-    public class ArticleGet
+    public class TopicMono
     {
         public required int Id { get; set; }
         public required string Title { get; set; }
         public required string Content { get; set; }
+    }
+
+    public class TopicTitle
+    {
+        public required int Id { get; set; }
+        public required string Title { get; set; }
     }
 }
