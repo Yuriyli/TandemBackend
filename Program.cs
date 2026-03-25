@@ -10,11 +10,10 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-var di = new DirectoryInfo(Directory.GetCurrentDirectory());
-
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlite(connectionString));
+var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "database", "tandem.db");
+builder.Services.AddDbContext<ApplicationContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}")
+);
 
 var app = builder.Build();
 
@@ -33,4 +32,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Update  Migrations
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+    dbContext.Database.Migrate();
+}
+
 app.Run();
