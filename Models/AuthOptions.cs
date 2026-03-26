@@ -5,8 +5,8 @@ namespace TandemBackend.Models
 {
     public static class AuthOptions
     {
-        public static string ISSUER = "MyAuthServer";
-        public static string AUDIENCE = "MyAuthClient";
+        public static string ISSUER = "TandemBackend";
+        public static string AUDIENCE = "TandemClient";
         private static string KEY = "SupeawrSeawdcretCode*(&UANBWD98y92g3uygrol3rg333";
 
         public static void SetSeedKey(string? key)
