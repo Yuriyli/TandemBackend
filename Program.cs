@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using TandemBackend.Data;
 using TandemBackend.Models;
 
@@ -12,7 +13,59 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer(
+        (document, context, cancellationToken) =>
+        {
+            // Ensure instances exist
+            document.Components ??= new OpenApiComponents();
+            document.Components.SecuritySchemes ??=
+                new Dictionary<string, IOpenApiSecurityScheme>();
+
+            document.Components.SecuritySchemes.Add(
+                "bearer",
+                new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Description = "Enter 'Bearer {token}'",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                }
+            );
+
+            document.SetReferenceHostDocument();
+
+            return Task.CompletedTask;
+        }
+    );
+
+    // Optional: Add operation transformer to conditionally add security
+    options.AddOperationTransformer(
+        (operation, context, cancellationToken) =>
+        {
+            // Check if the endpoint requires authorization
+            var hasAuthorize = context.Description.ActionDescriptor.EndpointMetadata.Any(em =>
+                em is Microsoft.AspNetCore.Authorization.AuthorizeAttribute
+            );
+
+            if (hasAuthorize)
+            {
+                operation.Security ??= new List<OpenApiSecurityRequirement>();
+                operation.Security.Add(
+                    new OpenApiSecurityRequirement
+                    {
+                        { new OpenApiSecuritySchemeReference("bearer"), [] },
+                    }
+                );
+            }
+
+            return Task.CompletedTask;
+        }
+    );
+});
 
 var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "database", "tandem.db");
 builder.Services.AddDbContext<ApplicationContext>(options =>
