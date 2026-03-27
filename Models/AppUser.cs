@@ -30,4 +30,10 @@ namespace TandemBackend.Models
         [MinLength(6)]
         public required string Password { get; set; }
     }
+
+    public class UserLoginReturn
+    {
+        public required string Name { get; set; }
+        public required string JWTToken { get; set; }
+    }
 }

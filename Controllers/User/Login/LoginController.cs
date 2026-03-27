@@ -23,10 +23,11 @@ namespace TandemBackend.Controllers.User.Login
         }
 
         [HttpPost]
+        [EndpointDescription("Endpoint for client side login")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
-            Type = typeof(string),
-            Description = "JWT token"
+            Type = typeof(UserLoginReturn),
+            Description = "Name and JWT token on retrun"
         )]
         [ProducesResponseType(StatusCodes.Status404NotFound, Description = "User not found")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Description = "Wrong password")]
@@ -57,8 +58,9 @@ namespace TandemBackend.Controllers.User.Login
                         SecurityAlgorithms.HmacSha256
                     )
                 );
+                var jwtToken = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-                return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
+                return Ok(new UserLoginReturn { Name = searchResult.Name, JWTToken = jwtToken });
             }
             catch (System.Exception)
             {
@@ -67,7 +69,7 @@ namespace TandemBackend.Controllers.User.Login
         }
 
         [HttpGet]
-        [Route("[controller]/test")]
+        [Route("test")]
         [Authorize]
         public async Task<IActionResult> Test()
         {

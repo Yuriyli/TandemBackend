@@ -22,10 +22,11 @@ namespace TandemBackend.Controllers.User.Register
         }
 
         [HttpPost]
+        [EndpointDescription("Endpoint for client side registration")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
-            Type = typeof(string),
-            Description = "JWT token"
+            Type = typeof(UserLoginReturn),
+            Description = "Name and JWT token on retrun"
         )]
         [ProducesResponseType(
             StatusCodes.Status409Conflict,
@@ -76,8 +77,8 @@ namespace TandemBackend.Controllers.User.Register
                         SecurityAlgorithms.HmacSha256
                     )
                 );
-
-                return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
+                var jwtToken = new JwtSecurityTokenHandler().WriteToken(jwt);
+                return Ok(new UserLoginReturn { Name = newUser.Name, JWTToken = jwtToken });
             }
             catch (System.Exception)
             {
