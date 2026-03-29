@@ -35,10 +35,19 @@ namespace TandemBackend.Controllers.User.Login
         {
             try
             {
-                var searchResult = await _context.Users.FirstOrDefaultAsync();
+                var searchResult = await _context.Users.FirstOrDefaultAsync(u =>
+                    u.Email == userLogin.Email
+                );
+
                 if (searchResult == null)
                 {
                     return new StatusCodeResult(StatusCodes.Status404NotFound);
+                }
+                if (searchResult.Password != userLogin.Password)
+                {
+                    Console.WriteLine(searchResult.Password);
+                    Console.WriteLine(userLogin.Password);
+                    return Unauthorized("Wrong password or email");
                 }
 
                 var claims = new List<Claim>
@@ -60,7 +69,14 @@ namespace TandemBackend.Controllers.User.Login
                 );
                 var jwtToken = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-                return Ok(new UserLoginReturn { Name = searchResult.Name, JWTToken = jwtToken });
+                return Ok(
+                    new UserLoginReturn
+                    {
+                        Id = searchResult.Id,
+                        Name = searchResult.Name,
+                        JWTToken = jwtToken,
+                    }
+                );
             }
             catch (System.Exception)
             {

@@ -52,7 +52,7 @@ namespace TandemBackend.Controllers.User.Register
                     Password = userRegister.Password,
                 };
 
-                // Save and check if has changes or send 500 code
+                // Save and check if has changes or send 500 code await _context.Users.AddAsync(newUser);
                 await _context.Users.AddAsync(newUser);
                 var cnhangesResult = await _context.SaveChangesAsync();
                 if (cnhangesResult == 0)
@@ -77,11 +77,20 @@ namespace TandemBackend.Controllers.User.Register
                         SecurityAlgorithms.HmacSha256
                     )
                 );
+
                 var jwtToken = new JwtSecurityTokenHandler().WriteToken(jwt);
-                return Ok(new UserLoginReturn { Name = newUser.Name, JWTToken = jwtToken });
+                return Ok(
+                    new UserLoginReturn
+                    {
+                        Id = newUser.Id,
+                        Name = newUser.Name,
+                        JWTToken = jwtToken,
+                    }
+                );
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
+                Console.WriteLine(e.Message);
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }

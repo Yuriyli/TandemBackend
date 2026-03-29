@@ -33,6 +33,7 @@ namespace TandemBackend.Models
 
     public class UserLoginReturn
     {
+        public required string Id { get; set; }
         public required string Name { get; set; }
         public required string JWTToken { get; set; }
     }
