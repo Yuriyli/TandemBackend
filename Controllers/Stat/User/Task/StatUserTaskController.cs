@@ -58,7 +58,14 @@ namespace TandemBackend.Controllers.Stat
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(
+            StatusCodes.Status201Created,
+            Description = "Returned if new entry is made"
+        )]
+        [ProducesResponseType(
+            StatusCodes.Status200OK,
+            Description = "Retruned if entry was in db, and changes IsFinished status"
+        )]
         [ProducesResponseType(StatusCodes.Status404NotFound, Description = "User id not found")]
         public async Task<IActionResult> PostTask(TaskStatPost taskStatPost)
         {
@@ -70,6 +77,21 @@ namespace TandemBackend.Controllers.Stat
                     return NotFound("User id not found");
                 }
                 string userId = userIdClaim.Value;
+
+                // Check if entry alrdy in db
+                var searchResult = await _context.TaskStats.FirstOrDefaultAsync(ts =>
+                    ts.UserId == userId
+                    && ts.TaskId == taskStatPost.TaskId
+                    && ts.TaskDifficulty == taskStatPost.TaskDifficulty
+                    && ts.TaskType == taskStatPost.TaskType
+                );
+                if (searchResult != null)
+                {
+                    searchResult.IsFinished = taskStatPost.IsFinished;
+                    var saveResult = await _context.SaveChangesAsync();
+
+                    return Ok();
+                }
 
                 var newTaskStat = new TaskStat
                 {
