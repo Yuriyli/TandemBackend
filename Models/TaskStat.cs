@@ -1,20 +1,20 @@
 namespace TandemBackend.Models
 {
-    enum TaskType
+    public enum TaskType
     {
         quiz,
         codeCompletion,
         codeEditor,
     }
 
-    enum TaskDifficulty
+    public enum TaskDifficulty
     {
         easy,
         medium,
         hard,
     }
 
-    class TaskStat
+    public class TaskStat
     {
         public required int Id { get; set; }
         public required string UserId { get; set; }
