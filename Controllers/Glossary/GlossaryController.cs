@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TandemBackend.Data;
 using TandemBackend.Models;
@@ -21,81 +20,40 @@ namespace TandemBackend.Controllers.Glossary
 
         [HttpGet]
         [EndpointDescription("Get list of topics with selected language")]
-        [Route("/api/glossary/titles/{language:alpha}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TopicTitle>))]
-        public async Task<IActionResult> GetTopicList(
-            [FromRoute] [Description("Accepts only \"en\" and \"ru\"")] Languages language
-        )
+        [Route("/api/glossary/titles/{language}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TopicGet>))]
+        public async Task<IActionResult> GetTopicList([FromRoute] Languages language)
         {
             try
             {
-                List<TopicTitle> result;
+                List<TopicGet> result;
                 switch (language)
                 {
                     case Languages.en:
                         goto default;
                     case Languages.ru:
                         result = await _context
-                            .Topics.Select(t => new TopicTitle { Id = t.Id, Title = t.TitleRu })
-                            .ToListAsync();
-                        break;
-                    default:
-                        result = await _context
-                            .Topics.Select(t => new TopicTitle { Id = t.Id, Title = t.Title })
-                            .ToListAsync();
-                        break;
-                }
-                return Ok(result);
-            }
-            catch (System.Exception)
-            {
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpGet("{language:alpha}/{id:int}")]
-        [EndpointDescription("Get topic with selected language")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TopicMono))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get(
-            [FromRoute] [Description("Accepts only \"en\" and \"ru\"")] Languages language,
-            [FromRoute] int id
-        )
-        {
-            try
-            {
-                TopicMono? result = null;
-
-                switch (language)
-                {
-                    case Languages.en:
-                        goto default;
-                    case Languages.ru:
-                        result = await _context
-                            .Topics.Where(t => t.Id == id)
-                            .Select(t => new TopicMono
-                            {
-                                Id = t.Id,
-                                Title = t.TitleRu,
-                                Content = t.ContentRu,
-                            })
-                            .FirstOrDefaultAsync();
-                        break;
-                    default:
-                        result = await _context
-                            .Topics.Where(t => t.Id == id)
-                            .Select(t => new TopicMono
+                            .RuTopics.Select(t => new TopicGet
                             {
                                 Id = t.Id,
                                 Title = t.Title,
-                                Content = t.Content,
+                                Description = t.Description,
+                                Example = t.Example,
                             })
-                            .FirstOrDefaultAsync();
+                            .ToListAsync();
+                        break;
+                    default:
+                        result = await _context
+                            .EnTopics.Select(t => new TopicGet
+                            {
+                                Id = t.Id,
+                                Title = t.Title,
+                                Description = t.Description,
+                                Example = t.Example,
+                            })
+                            .ToListAsync();
                         break;
                 }
-
-                if (result == null)
-                    return NotFound();
                 return Ok(result);
             }
             catch (System.Exception)
@@ -105,22 +63,49 @@ namespace TandemBackend.Controllers.Glossary
         }
 
         [HttpPost]
-        [EndpointDescription("Creates a record in the database with a new topic")]
+        [EndpointDescription("Creates a records in the database with a new topics from array")]
+        [Route("/api/glossary/titles/{language}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> Post([FromBody] TopicPut topic)
+        public async Task<IActionResult> Post(
+            [FromRoute] Languages language,
+            [FromBody] TopicPost[] topics
+        )
         {
             try
             {
-                await _context.Topics.AddAsync(
-                    new Topic
+                foreach (TopicPost topic in topics)
+                {
+                    switch (language)
                     {
-                        Id = 0,
-                        Title = topic.Title,
-                        Content = topic.Content,
-                        TitleRu = topic.TitleRu,
-                        ContentRu = topic.ContentRu,
+                        case Languages.en:
+                            goto default;
+                        case Languages.ru:
+                            await _context.RuTopics.AddAsync(
+                                new RuTopic
+                                {
+                                    Id = 0,
+                                    Title = topic.Title,
+                                    Description = topic.Description,
+                                    Example = topic.Example,
+                                }
+                            );
+
+                            break;
+                        default:
+                            await _context.EnTopics.AddAsync(
+                                new EnTopic
+                                {
+                                    Id = 0,
+                                    Title = topic.Title,
+                                    Description = topic.Description,
+                                    Example = topic.Example,
+                                }
+                            );
+
+                            break;
                     }
-                );
+                }
+
                 var isSaved = await _context.SaveChangesAsync();
 
                 if (isSaved >= 1)
@@ -133,20 +118,51 @@ namespace TandemBackend.Controllers.Glossary
             }
         }
 
-        [HttpDelete("{id:int}")]
-        [EndpointDescription("Delete topic by id")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [HttpDelete]
+        [EndpointDescription("Delete topics by ids")]
+        [Route("/api/glossary/titles/{language}")]
+        [ProducesResponseType(
+            StatusCodes.Status200OK,
+            Type = typeof(int),
+            Description = "Retruns number of deleted topics"
+        )]
+        public async Task<IActionResult> Delete(
+            [FromRoute] Languages language,
+            [FromBody] int[] ids
+        )
         {
             try
             {
-                var topic = await _context.Topics.FirstOrDefaultAsync(u => u.Id == id);
-                if (topic == null)
-                    return NotFound();
-                _context.Topics.Remove(topic);
-                await _context.SaveChangesAsync();
-                return NoContent();
+                foreach (var id in ids)
+                {
+                    switch (language)
+                    {
+                        case Languages.en:
+                            goto default;
+                        case Languages.ru:
+                            var ruTopic = await _context.RuTopics.FirstOrDefaultAsync(u =>
+                                u.Id == id
+                            );
+                            if (ruTopic != null)
+                            {
+                                _context.RuTopics.Remove(ruTopic);
+                            }
+                            break;
+                        default:
+                            var enTopic = await _context.EnTopics.FirstOrDefaultAsync(u =>
+                                u.Id == id
+                            );
+                            if (enTopic != null)
+                            {
+                                _context.EnTopics.Remove(enTopic);
+                            }
+
+                            break;
+                    }
+                }
+
+                var saveChangesResult = await _context.SaveChangesAsync();
+                return Ok(saveChangesResult);
             }
             catch (System.Exception)
             {
@@ -156,20 +172,46 @@ namespace TandemBackend.Controllers.Glossary
 
         [HttpPut]
         [EndpointDescription("Put changes to topic")]
+        [Route("/api/glossary/title/{language}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put([FromBody] Topic topic)
+        public async Task<IActionResult> Put(
+            [FromRoute] Languages language,
+            [FromBody] TopicPut topic
+        )
         {
             try
             {
-                var originTopic = await _context.Topics.FirstOrDefaultAsync(t => t.Id == topic.Id);
-                if (originTopic == null)
-                    return NotFound();
+                switch (language)
+                {
+                    case Languages.en:
+                        goto default;
+                    case Languages.ru:
+                        var originRuTopic = await _context.RuTopics.FirstOrDefaultAsync(t =>
+                            t.Id == topic.Id
+                        );
 
-                originTopic.Title = topic.Title;
-                originTopic.Content = topic.Content;
-                originTopic.TitleRu = topic.TitleRu;
-                originTopic.ContentRu = topic.ContentRu;
+                        if (originRuTopic == null)
+                            return NotFound();
+
+                        originRuTopic.Title = topic.Title;
+                        originRuTopic.Description = topic.Description;
+                        originRuTopic.Example = topic.Example;
+                        break;
+                    default:
+                        var originEnTopic = await _context.EnTopics.FirstOrDefaultAsync(t =>
+                            t.Id == topic.Id
+                        );
+
+                        if (originEnTopic == null)
+                            return NotFound();
+
+                        originEnTopic.Title = topic.Title;
+                        originEnTopic.Description = topic.Description;
+                        originEnTopic.Example = topic.Example;
+                        break;
+                }
+
                 await _context.SaveChangesAsync();
 
                 return Ok();
