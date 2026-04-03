@@ -10,7 +10,7 @@ using TandemBackend.Data;
 namespace TandemBackend.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20260403102152_RefactorTopics")]
+    [Migration("20260403124331_RefactorTopics")]
     partial class RefactorTopics
     {
         /// <inheritdoc />
@@ -41,6 +41,29 @@ namespace TandemBackend.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("TandemBackend.Models.EnTopic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Example")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EnTopics");
+                });
+
             modelBuilder.Entity("TandemBackend.Models.ExampleModel", b =>
                 {
                     b.Property<int>("Id")
@@ -58,6 +81,29 @@ namespace TandemBackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ExampleModels");
+                });
+
+            modelBuilder.Entity("TandemBackend.Models.RuTopic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Example")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RuTopics");
                 });
 
             modelBuilder.Entity("TandemBackend.Models.TaskStat", b =>
@@ -85,29 +131,6 @@ namespace TandemBackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TaskStats");
-                });
-
-            modelBuilder.Entity("TandemBackend.Models.Topic", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Example")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Topic");
                 });
 #pragma warning restore 612, 618
         }
