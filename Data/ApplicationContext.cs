@@ -5,7 +5,6 @@ namespace TandemBackend.Data
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<ExampleModel> ExampleModels => Set<ExampleModel>();
         public DbSet<EnTopic> EnTopics => Set<EnTopic>();
         public DbSet<RuTopic> RuTopics => Set<RuTopic>();
         public DbSet<AppUser> Users => Set<AppUser>();
