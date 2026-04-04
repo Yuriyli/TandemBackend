@@ -11,11 +11,10 @@
 
 ## Local Build and Run
 
-- Create a `/database` folder in the root of the project
-
 ### Prerequisites
 
 - [.NET SDK](https://dotnet.microsoft.com/download) (version 10.0 or higher)
+- Create a `/database` folder in the root of the project
 - [Docker](https://docker.com) (optional, for containerization)
 - Install [secret](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-10.0&tabs=windows) (optional): `"AuthOptions:Key": "AnyRandomString12345"`
 
