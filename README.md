@@ -7,15 +7,17 @@
 
 - **Development environment**: http://45.12.130.140:1314/swagger/
 - **Production environment**: http://45.12.130.140:1315/swagger/
-- **Endpoint for custom openApi user**: /openapi/v1.json
+- **Endpoint for custom openApi user**: `/openapi/v1.json`
 
 ## Local Build and Run
+
+- Create a `/database` folder in the root of the project
 
 ### Prerequisites
 
 - [.NET SDK](https://dotnet.microsoft.com/download) (version 10.0 or higher)
 - [Docker](https://docker.com) (optional, for containerization)
-- Install [secret](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-10.0&tabs=windows) (optional): "AuthOptions:Key": "AnyRandomString12345"
+- Install [secret](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-10.0&tabs=windows) (optional): `"AuthOptions:Key": "AnyRandomString12345"`
 
 ### Build and Run without Docker
 
