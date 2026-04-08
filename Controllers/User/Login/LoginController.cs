@@ -24,7 +24,7 @@ namespace TandemBackend.Controllers.User.Login
         }
 
         [HttpPost]
-        [EndpointDescription("Endpoint for client side login")]
+        [EndpointSummary("Endpoint for client side login")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
             Type = typeof(UserLoginReturn),

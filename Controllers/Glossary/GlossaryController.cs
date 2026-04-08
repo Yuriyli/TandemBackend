@@ -19,7 +19,7 @@ namespace TandemBackend.Controllers.Glossary
         }
 
         [HttpGet]
-        [EndpointDescription("Get list of topics with selected language")]
+        [EndpointSummary("Get list of topics with selected language")]
         [Route("/api/glossary/topics/{language}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<TopicGet>))]
         public async Task<IActionResult> GetTopicList([FromRoute] Languages language)
@@ -63,7 +63,7 @@ namespace TandemBackend.Controllers.Glossary
         }
 
         [HttpPost]
-        [EndpointDescription("Creates a records in the database with a new topics from array")]
+        [EndpointSummary("Creates a records in the database with a new topics from array")]
         [Route("/api/glossary/topics/{language}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Post(
@@ -119,7 +119,7 @@ namespace TandemBackend.Controllers.Glossary
         }
 
         [HttpDelete]
-        [EndpointDescription("Delete topics by ids")]
+        [EndpointSummary("Delete topics by ids")]
         [Route("/api/glossary/topics/{language}")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
@@ -171,7 +171,7 @@ namespace TandemBackend.Controllers.Glossary
         }
 
         [HttpPut]
-        [EndpointDescription("Put changes to topic")]
+        [EndpointSummary("Put changes to topic")]
         [Route("/api/glossary/topic/{language}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -23,7 +23,7 @@ namespace TandemBackend.Controllers.User.Register
         }
 
         [HttpPost]
-        [EndpointDescription("Endpoint for client side registration")]
+        [EndpointSummary("Endpoint for client side registration")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
             Type = typeof(UserLoginReturn),

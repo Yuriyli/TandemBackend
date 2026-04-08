@@ -8,6 +8,7 @@ namespace TandemBackend.Controllers.Stat
 {
     [Route("api/stat/user/task")]
     [ApiController]
+    [Tags("Stat")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -22,6 +23,7 @@ namespace TandemBackend.Controllers.Stat
         }
 
         [HttpGet]
+        [EndpointSummary("Get list of task statistics for current user")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
             Type = typeof(List<TaskStatGetResult>),
@@ -58,6 +60,7 @@ namespace TandemBackend.Controllers.Stat
         }
 
         [HttpPost]
+        [EndpointSummary("Post a task statistics record for the user")]
         [ProducesResponseType(
             StatusCodes.Status201Created,
             Description = "Returned if new entry is made"
