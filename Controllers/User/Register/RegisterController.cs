@@ -8,8 +8,9 @@ using TandemBackend.Models;
 
 namespace TandemBackend.Controllers.User.Register
 {
-    [Route("api/[controller]")]
+    [Route("api/register")]
     [ApiController]
+    [Tags("User")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class RegisterController : ControllerBase

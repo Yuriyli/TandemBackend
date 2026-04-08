@@ -11,6 +11,7 @@ namespace TandemBackend.Controllers.User.Login
 {
     [Route("api/login")]
     [ApiController]
+    [Tags("User")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class LoginController : ControllerBase
