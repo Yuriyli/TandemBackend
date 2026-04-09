@@ -8,8 +8,9 @@ using TandemBackend.Models;
 
 namespace TandemBackend.Controllers.User.Register
 {
-    [Route("api/[controller]")]
+    [Route("api/register")]
     [ApiController]
+    [Tags("User")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class RegisterController : ControllerBase
@@ -22,7 +23,7 @@ namespace TandemBackend.Controllers.User.Register
         }
 
         [HttpPost]
-        [EndpointDescription("Endpoint for client side registration")]
+        [EndpointSummary("Endpoint for client side registration")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
             Type = typeof(UserLoginReturn),

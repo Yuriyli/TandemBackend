@@ -11,6 +11,7 @@ namespace TandemBackend.Controllers.User.Login
 {
     [Route("api/login")]
     [ApiController]
+    [Tags("User")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class LoginController : ControllerBase
@@ -23,7 +24,7 @@ namespace TandemBackend.Controllers.User.Login
         }
 
         [HttpPost]
-        [EndpointDescription("Endpoint for client side login")]
+        [EndpointSummary("Endpoint for client side login")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
             Type = typeof(UserLoginReturn),
@@ -82,18 +83,6 @@ namespace TandemBackend.Controllers.User.Login
             {
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
-        }
-
-        [HttpGet]
-        [Route("test")]
-        [Authorize]
-        public async Task<IActionResult> Test()
-        {
-            string result = "";
-            var userId = User.FindFirst("userId");
-
-            result += userId?.Value;
-            return Ok(result);
         }
     }
 }
