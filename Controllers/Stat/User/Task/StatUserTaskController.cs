@@ -48,7 +48,6 @@ namespace TandemBackend.Controllers.Stat
                     {
                         TaskId = ts.TaskId,
                         TaskType = ts.TaskType,
-                        TaskDifficulty = ts.TaskDifficulty,
                     })
                     .ToListAsync();
                 return Ok(searchResult ?? new List<TaskStatGetResult>());
@@ -85,7 +84,6 @@ namespace TandemBackend.Controllers.Stat
                 var searchResult = await _context.TaskStats.FirstOrDefaultAsync(ts =>
                     ts.UserId == userId
                     && ts.TaskId == taskStatPost.TaskId
-                    && ts.TaskDifficulty == taskStatPost.TaskDifficulty
                     && ts.TaskType == taskStatPost.TaskType
                 );
                 if (searchResult != null)
@@ -103,7 +101,6 @@ namespace TandemBackend.Controllers.Stat
                     TaskId = taskStatPost.TaskId,
                     IsFinished = taskStatPost.IsFinished,
                     TaskType = taskStatPost.TaskType,
-                    TaskDifficulty = taskStatPost.TaskDifficulty,
                 };
 
                 await _context.TaskStats.AddAsync(newTaskStat);

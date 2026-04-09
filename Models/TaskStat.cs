@@ -7,7 +7,6 @@ namespace TandemBackend.Models
         public required int TaskId { get; set; }
         public required bool IsFinished { get; set; }
         public required TaskType TaskType { get; set; }
-        public required TaskDifficulty TaskDifficulty { get; set; }
     }
 
     public class TaskStatPost
@@ -15,13 +14,11 @@ namespace TandemBackend.Models
         public required int TaskId { get; set; }
         public required bool IsFinished { get; set; }
         public required TaskType TaskType { get; set; }
-        public required TaskDifficulty TaskDifficulty { get; set; }
     }
 
     public class TaskStatGetResult
     {
         public required int TaskId { get; set; }
         public required TaskType TaskType { get; set; }
-        public required TaskDifficulty TaskDifficulty { get; set; }
     }
 }
