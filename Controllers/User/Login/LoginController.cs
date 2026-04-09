@@ -84,17 +84,5 @@ namespace TandemBackend.Controllers.User.Login
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
-
-        [HttpGet]
-        [Route("test")]
-        [Authorize]
-        public async Task<IActionResult> Test()
-        {
-            string result = "";
-            var userId = User.FindFirst("userId");
-
-            result += userId?.Value;
-            return Ok(result);
-        }
     }
 }
