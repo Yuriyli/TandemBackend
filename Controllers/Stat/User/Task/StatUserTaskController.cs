@@ -43,11 +43,15 @@ namespace TandemBackend.Controllers.Stat
                 string userId = userIdClaim.Value;
 
                 var searchResult = await _context
-                    .TaskStats.Where(ts => ts.UserId == userId && ts.IsFinished)
+                    .TaskStats.Where(ts => ts.UserId == userId)
                     .Select(ts => new TaskStatGetResult
                     {
-                        TaskId = ts.TaskId,
+                        LessonName = ts.LessonName,
                         TaskType = ts.TaskType,
+                        Difficulty = ts.Difficulty,
+                        EarnedPoints = ts.EarnedPoints,
+                        CorrectAnswers = ts.CorrectAnswers,
+                        WrongAnswers = ts.WrongAnswers,
                     })
                     .ToListAsync();
                 return Ok(searchResult ?? new List<TaskStatGetResult>());
@@ -83,14 +87,19 @@ namespace TandemBackend.Controllers.Stat
                 // Check if entry alrdy in db
                 var searchResult = await _context.TaskStats.FirstOrDefaultAsync(ts =>
                     ts.UserId == userId
-                    && ts.TaskId == taskStatPost.TaskId
+                    && ts.LessonName == taskStatPost.LessonName
                     && ts.TaskType == taskStatPost.TaskType
+                    && ts.Difficulty == taskStatPost.Difficulty
                 );
                 if (searchResult != null)
                 {
-                    searchResult.IsFinished = taskStatPost.IsFinished;
+                    if (searchResult.EarnedPoints < taskStatPost.EarnedPoints)
+                    {
+                        searchResult.EarnedPoints = taskStatPost.EarnedPoints;
+                        searchResult.CorrectAnswers = taskStatPost.CorrectAnswers;
+                        searchResult.WrongAnswers = taskStatPost.WrongAnswers;
+                    }
                     var saveResult = await _context.SaveChangesAsync();
-
                     return Ok();
                 }
 
@@ -98,9 +107,12 @@ namespace TandemBackend.Controllers.Stat
                 {
                     Id = 0,
                     UserId = userId,
-                    TaskId = taskStatPost.TaskId,
-                    IsFinished = taskStatPost.IsFinished,
                     TaskType = taskStatPost.TaskType,
+                    LessonName = taskStatPost.LessonName,
+                    Difficulty = taskStatPost.Difficulty,
+                    EarnedPoints = taskStatPost.EarnedPoints,
+                    CorrectAnswers = taskStatPost.CorrectAnswers,
+                    WrongAnswers = taskStatPost.WrongAnswers,
                 };
 
                 await _context.TaskStats.AddAsync(newTaskStat);
