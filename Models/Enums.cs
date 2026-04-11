@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace TandemBackend.Models
 {
-    [Description("Enumerator contains {en,ru}")]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Languages
     {
