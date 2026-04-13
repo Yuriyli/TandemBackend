@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TandemBackend.Data;
+using TandemBackend.Models;
 
 namespace TandemBackend.Controllers.Stat
 {
@@ -26,11 +27,11 @@ namespace TandemBackend.Controllers.Stat
         [EndpointSummary("Get user total score")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
-            Type = typeof(int),
+            Type = typeof(ScoreReturn),
             Description = "User total score from tasks"
         )]
         [ProducesResponseType(StatusCodes.Status404NotFound, Description = "User id not found")]
-        public async Task<IActionResult> GetTasks()
+        public async Task<IActionResult> GetScore()
         {
             try
             {
@@ -40,9 +41,23 @@ namespace TandemBackend.Controllers.Stat
                     return NotFound("User id not found");
                 }
                 string userId = userIdClaim.Value;
-                var result = await _context
-                    .TaskStats.Where(ts => ts.UserId == userId)
-                    .SumAsync(ts => ts.EarnedPoints);
+
+                var userDb = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+                if (userDb == null)
+                {
+                    return NotFound("User id not found");
+                }
+
+                var score = userDb.TotalScore;
+
+                var ratingList = await _context
+                    .Users.OrderByDescending(u => u.TotalScore)
+                    .Select(u => u.Id)
+                    .ToListAsync();
+
+                var userRating = ratingList.FindIndex(id => id == userId) + 1;
+
+                var result = new ScoreReturn { Score = score, UserRating = userRating };
                 return Ok(result);
             }
             catch (System.Exception)
