@@ -84,6 +84,12 @@ namespace TandemBackend.Controllers.Stat
                 }
                 string userId = userIdClaim.Value;
 
+                var userDb = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+                if (userDb == null)
+                {
+                    return NotFound("User id not found");
+                }
+
                 // Check if entry alrdy in db
                 var searchResult = await _context.TaskStats.FirstOrDefaultAsync(ts =>
                     ts.UserId == userId
@@ -95,11 +101,14 @@ namespace TandemBackend.Controllers.Stat
                 {
                     if (searchResult.EarnedPoints < taskStatPost.EarnedPoints)
                     {
+                        userDb.TotalScore += taskStatPost.EarnedPoints - searchResult.EarnedPoints;
+
                         searchResult.EarnedPoints = taskStatPost.EarnedPoints;
                         searchResult.CorrectAnswers = taskStatPost.CorrectAnswers;
                         searchResult.WrongAnswers = taskStatPost.WrongAnswers;
+
+                        await _context.SaveChangesAsync();
                     }
-                    var saveResult = await _context.SaveChangesAsync();
                     return Ok();
                 }
 
@@ -116,6 +125,7 @@ namespace TandemBackend.Controllers.Stat
                 };
 
                 await _context.TaskStats.AddAsync(newTaskStat);
+                userDb.TotalScore += taskStatPost.EarnedPoints;
                 var saveChangesResult = await _context.SaveChangesAsync();
 
                 if (saveChangesResult <= 0)

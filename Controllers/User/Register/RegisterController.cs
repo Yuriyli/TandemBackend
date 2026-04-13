@@ -51,6 +51,7 @@ namespace TandemBackend.Controllers.User.Register
                     Name = userRegister.Name,
                     Email = userRegister.Email,
                     Password = userRegister.Password,
+                    TotalScore = 0,
                 };
 
                 // Save and check if has changes or send 500 code await _context.Users.AddAsync(newUser);
