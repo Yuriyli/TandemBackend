@@ -9,6 +9,8 @@ namespace TandemBackend.Data
         public DbSet<RuTopic> RuTopics => Set<RuTopic>();
         public DbSet<AppUser> Users => Set<AppUser>();
         public DbSet<TaskStat> TaskStats => Set<TaskStat>();
+        public DbSet<Lesson> Lessons => Set<Lesson>();
+        public DbSet<LessonRu> LessonsRu => Set<LessonRu>();
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options) { }
