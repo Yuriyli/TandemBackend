@@ -306,7 +306,6 @@ namespace TandemBackend.Controllers.Lessons
             [FromBody] PracticeTopicPut practiceTopicPut
         )
         {
-            Console.WriteLine(practiceTopicPut);
             try
             {
                 PracticeTopic? searchResult;
