@@ -43,7 +43,7 @@ namespace TandemBackend.Models
         public required string Description { get; set; }
     }
 
-    public class PracticeTopictPut
+    public class PracticeTopicPut
     {
         public required string Name { get; set; }
         public required string Title { get; set; }
