@@ -12,6 +12,7 @@ namespace TandemBackend.Models
         public required string Description { get; set; }
 
         public PracticeTopicRu? PracticeTopicRu { get; set; }
+        // public Quiz? Quiz { get; set; }
     }
 
     public class PracticeTopicRu
