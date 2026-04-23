@@ -80,7 +80,7 @@ namespace TandemBackend.Models
 
         public required string Title { get; set; }
         public required string Description { get; set; }
-        public required IEnumerable<QuizQuestionPost> Questions { get; set; }
+        public required IEnumerable<QuizQuestionGetResult> Questions { get; set; }
     }
 
     public class QuizQuestionGetResult
@@ -99,7 +99,7 @@ namespace TandemBackend.Models
 
         [MinLength(10)]
         [MaxLength(10)]
-        public required IEnumerable<QuizQuestionPost> Questions { get; set; }
+        public required IEnumerable<QuizQuestionPut> Questions { get; set; }
     }
 
     public class QuizQuestionPut
