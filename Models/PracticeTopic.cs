@@ -14,6 +14,7 @@ namespace TandemBackend.Models
         public PracticeTopicRu? PracticeTopicRu { get; set; }
         // public Quiz? Quiz { get; set; }
         // public CodeCompletion? CodeCompletion{ get; set; }
+        // public CodeEditor? CodeEditor{ get; set; }
     }
 
     public class PracticeTopicRu
