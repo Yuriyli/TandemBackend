@@ -48,7 +48,7 @@ namespace TandemBackend.Models
     {
         public required int Id { get; set; }
 
-        public required int CodeEditorId { get; set; }
+        public required int CodeEditorRuId { get; set; }
         public required CodeEditorRu CodeEditorRu { get; set; }
 
         public required string Title { get; set; }
