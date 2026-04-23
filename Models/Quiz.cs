@@ -90,4 +90,24 @@ namespace TandemBackend.Models
         public required string CorrectAnswer { get; set; }
         public required IEnumerable<string> Options { get; set; }
     }
+
+    public class QuizPut
+    {
+        public required string Name { get; set; }
+        public required string Title { get; set; }
+        public required string Description { get; set; }
+
+        [MinLength(10)]
+        [MaxLength(10)]
+        public required IEnumerable<QuizQuestionPost> Questions { get; set; }
+    }
+
+    public class QuizQuestionPut
+    {
+        public required string Question { get; set; }
+        public required string CorrectAnswer { get; set; }
+
+        [MinLength(3)]
+        public required IEnumerable<string> Options { get; set; }
+    }
 }
