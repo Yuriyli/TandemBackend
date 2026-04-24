@@ -6,6 +6,7 @@ namespace TandemBackend.Models
         public required string Name { get; set; }
         public required string Title { get; set; }
         public LessonRu? LessonRu { get; set; }
+        public PracticeTopic? PracticeTopic { get; set; }
     }
 
     public class LessonRu
