@@ -118,10 +118,8 @@ namespace TandemBackend.Controllers.Task
 
                 return Ok(result);
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                Console.WriteLine(e);
-                Console.WriteLine(e.StackTrace);
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
@@ -363,7 +361,7 @@ namespace TandemBackend.Controllers.Task
         [ProducesResponseType(
             StatusCodes.Status200OK,
             Type = typeof(int),
-            Description = "Retruns number of deleted quizzes by name"
+            Description = "Retruns number of deleted code-completion tasks by name"
         )]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
